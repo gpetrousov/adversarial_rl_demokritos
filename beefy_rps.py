@@ -53,9 +53,9 @@ class BeefyRPSEnv():
         self.state = 0
 
 
-class FictitiousPlayAgent():
+class FictitiousPlayAgent(payoff_matrix):
 
-    def __init__(self):
+    def __init__(self, payoff_matrix):
         # Times a move has been played
                       #R #P #S
         self.counts = [0, 0, 0]
@@ -67,12 +67,7 @@ class FictitiousPlayAgent():
         # Utility matrix
         self.rows = 3
         self.cols = 3
-        self.u = [
-            # R  P  S
-            [0, -1, 1],  # R
-            [1, 0, -1],  # P
-            [-1, 1, 0],  # S
-            ]
+        self.payoff_matrix = payoff_matrix
 
     def action(self, opponent_action):
         """
@@ -100,7 +95,7 @@ class FictitiousPlayAgent():
         max_u = -float("inf")
         best_move = random.randint(0, 2)
         for i in range(self.rows):
-            row_i_sum = sum([a*b for a, b in zip(self.u[i], self.sigma)])
+            row_i_sum = sum([a*b for a, b in zip(self.payoff_matrix[i], self.sigma)])
             if row_i_sum > max_u:
                 max_u = row_i_sum
                 best_move = i
@@ -110,8 +105,24 @@ class FictitiousPlayAgent():
 
 def main():
     env = BeefyRPSEnv()
-    agent1 = FictitiousPlayAgent()
-    agent2 = FictitiousPlayAgent()
+
+    agent1 = FictitiousPlayAgent(
+            [
+                 #R  P  S
+                [0, -1, 1],  # R
+                [1, 0, -1],  # P
+                [-1, 1, 0],  # S
+            ]
+        )
+
+    agent2 = FictitiousPlayAgent(
+            [
+                #R  P  S
+                [0, 1, -1],  # R
+                [-1, 0, 1],  # P
+                [1, -1, 0],  # S
+            ]
+        )
 
     # Initializer
     last_act2 = None
