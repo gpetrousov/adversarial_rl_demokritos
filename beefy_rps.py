@@ -55,6 +55,9 @@ class BeefyRPSEnv():
 
 
 class FictitiousPlayAgent():
+    """
+    Fictitious Play Agent: A model based agent.
+    """
 
     def __init__(self, payoff_matrix):
         # Times a move has been played
