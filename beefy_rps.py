@@ -1,4 +1,5 @@
 import random
+import argparse
 
 
 class BeefyRPSEnv():
@@ -53,12 +54,12 @@ class BeefyRPSEnv():
         self.state = 0
 
 
-class FictitiousPlayAgent(payoff_matrix):
+class FictitiousPlayAgent():
 
     def __init__(self, payoff_matrix):
         # Times a move has been played
                       #R #P #S
-        self.counts = [0, 0, 0]
+        self.counts = [1, 1, 1]
 
         # Probability distribution
                       #R #P #S
@@ -103,9 +104,10 @@ class FictitiousPlayAgent(payoff_matrix):
         return best_move
 
 
-def main():
+def main(rounds):
     env = BeefyRPSEnv()
 
+    # Row player
     agent1 = FictitiousPlayAgent(
             [
                  #R  P  S
@@ -115,6 +117,7 @@ def main():
             ]
         )
 
+    # Column player
     agent2 = FictitiousPlayAgent(
             [
                 #R  P  S
@@ -130,7 +133,7 @@ def main():
 
     env.reset()
 
-    for i in range(1000):
+    for i in range(rounds):
         curr_act1 = agent1.action(last_act2)
         curr_act2 = agent2.action(last_act1)
 
@@ -138,7 +141,17 @@ def main():
 
         last_act1 = curr_act1
         last_act2 = curr_act2
+        print(f"Itteration: {i}")
+
+    print(f"Agent 1 counts: {agent1.counts}\nsigma: {agent1.sigma}")
+    print(f"Agent 2 counts: {agent2.counts}\nsigma: {agent2.sigma}")
 
 
 if __name__ == "__main__":
-    main()
+    parser = argparse.ArgumentParser(
+            description="Beefy RPS."
+            )
+    parser.add_argument("-r", "--rounds", type=int, required=True)
+    args = parser.parse_args()
+    rounds = args.rounds
+    main(rounds)
