@@ -87,7 +87,7 @@ class FictitiousPlayAgent():
 
     def update_sigma(self, opponent_action):
         for i in range(len(self.sigma)):
-            self.sigma[i] = self.counts[i]/sum(self.counts)
+            self.sigma[i] = round(self.counts[i]/sum(self.counts), 3)
 
     def find_best_move(self):
         """
