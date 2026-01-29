@@ -1,5 +1,6 @@
 import random
 import argparse
+import numpy as np
 
 
 class BeefyRPSEnv():
@@ -107,6 +108,43 @@ class FictitiousPlayAgent():
         return best_move
 
 
+class QLearning():
+    """Generic Q-Learning algorightm."""
+
+    def __init__(self, states=[0], actions=[0, 1, 2]):
+        # Initialize Q-table
+        self.q_table = {state: [0.0 for action in actions] for state in states}
+        self.epsilon = 0.1
+        self.alpha = 0.1
+        self.gamma = 0.9
+        self.action_space = actions
+
+    def action(self, state):
+        """
+        Choose an action using the epsilon-greedy policy.
+        """
+        # Exploire - Exploit
+        if np.random.rand() < self.epsilon:
+            return np.random.choice(self.action_space)
+        else:
+            state_values = self.q_table[state]
+            max_val = max(state_values)
+            # If we have multiple max values, runs a loop
+            best_action = [i for i, v in enumerate(state_values) if v == max_val]
+            return np.random.choice(best_action)
+
+    def update_q_value(self, state, action, reward, next_state):
+        """
+        Update the Q-value using Bellman eq..
+        """
+        max_next_q = max(self.q_table[next_state])
+        # TEmpoeral difference
+        td_target = reward + self.gamma * max_next_q
+
+        # New Q value
+        self.q_table[state][action] += self.alpha * (td_target - self.q_table[state][action])
+
+
 def main(rounds):
     env = BeefyRPSEnv()
 
@@ -120,34 +158,41 @@ def main(rounds):
             ]
         )
 
+    # FP scenario
     # Column player
-    agent2 = FictitiousPlayAgent(
-            [
-                #R  P  S
-                [0, 1, -1],  # R
-                [-1, 0, 1],  # P
-                [1, -1, 0],  # S
-            ]
-        )
+    # agent2 = FictitiousPlayAgent(
+    #         [
+    #             #R  P  S
+    #             [0, 1, -1],  # R
+    #             [-1, 0, 1],  # P
+    #             [1, -1, 0],  # S
+    #         ]
+    #     )
+
+    agent2 = QLearning()
 
     # Initializer
     last_act2 = None
-    last_act1 = None
 
     env.reset()
 
     for i in range(rounds):
+
+        # Register actions
         curr_act1 = agent1.action(last_act2)
-        curr_act2 = agent2.action(last_act1)
+        curr_act2 = agent2.action(env.state)
 
-        env.step(curr_act1, curr_act2)
+        # Step the environment
+        env_state, reward1, reward2 = env.step(curr_act1, curr_act2)
 
-        last_act1 = curr_act1
+        # RL agent learns
+        agent2.update_q_value(env_state, curr_act2, reward2, env_state)
+
         last_act2 = curr_act2
         print(f"Itteration: {i}")
 
     print(f"Agent 1 counts: {agent1.counts}\nsigma: {agent1.sigma}")
-    print(f"Agent 2 counts: {agent2.counts}\nsigma: {agent2.sigma}")
+    print(f"Agent 2 q_table: {agent2.q_table}")
 
 
 if __name__ == "__main__":
