@@ -71,6 +71,7 @@ jupyter notebook "report.ipynb"
 - [ ] evolutionary algorithms - research
 - [ ] bomb difusal game/environment
 - [ ] penalties game/environment
+- [ ] DoubleQ - https://arxiv.org/html/2310.06286v3
 
 
 # Resources
