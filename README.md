@@ -30,8 +30,6 @@ The study utilizes Rock-Paper-Scissors (RPS) as a fundamental model for zero-sum
 
 - requirements.txt: Python dependencies required to run the simulations (e.g., numpy, matplotlib, scipy).
 
-- LICENSE: Project licensing information.
-
 ### Installation
 
 ```bash
