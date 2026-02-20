@@ -26,8 +26,6 @@ The study utilizes Rock-Paper-Scissors (RPS) as a fundamental model for zero-sum
 
 - report.ipynb: The primary research document containing the theory, implementation code, and interactive visualizations.
 
-- report.html: A static, pre-rendered version of the research for quick viewing.
-
 - requirements.txt: Python dependencies required to run the simulations (e.g., numpy, matplotlib, scipy).
 
 ### Installation
